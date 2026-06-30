@@ -1,0 +1,276 @@
+import fs from 'fs';
+import path from 'path';
+import { Vehicle, Driver, Booking, User, Review, CompanySettings, PromoCode } from '../src/types';
+
+// Use exact generated image filenames from the tool responses
+const IMAGES = {
+  sedan: '/src/assets/images/luxury_sedan_s_class_1782314709798.jpg',
+  suv: '/src/assets/images/prestige_suv_black_1782314726642.jpg',
+  van: '/src/assets/images/business_van_v_class_1782314742231.jpg',
+};
+
+const DATA_FILE_PATH = path.join(process.cwd(), '.data.json');
+
+interface Schema {
+  vehicles: Vehicle[];
+  drivers: Driver[];
+  bookings: Booking[];
+  users: User[];
+  reviews: Review[];
+  settings: CompanySettings;
+  promoCodes: PromoCode[];
+}
+
+const DEFAULT_DATA: Schema = {
+  vehicles: [
+    {
+      id: 'sedan-1',
+      name: 'Mercedes-Benz Classe S Limousine',
+      category: 'Sedan',
+      passengerCapacity: 3,
+      luggageCapacity: 3,
+      baseRate: 100,
+      ratePerKm: 3.5,
+      hourlyRate: 150,
+      image: IMAGES.sedan,
+      specifications: ['WiFi 5G Haut Débit', 'Intérieur Cuir Nappa Noir', 'Sièges massants & chauffants', 'Bouteilles d\'eau minérale Safia', 'Chargeur universel & iPad à bord', 'Climatisation active individuelle'],
+      available: true,
+      maintenanceStatus: 'Good'
+    },
+    {
+      id: 'suv-1',
+      name: 'Range Rover Autobiography LWB',
+      category: 'SUV',
+      passengerCapacity: 4,
+      luggageCapacity: 4,
+      baseRate: 150,
+      ratePerKm: 4.5,
+      hourlyRate: 200,
+      image: IMAGES.suv,
+      specifications: ['Châssis long Ultra-confort', 'Toit panoramique ouvrant', 'WiFi 5G & Prises de courant', 'Compartiment réfrigéré à boissons', 'Insonorisation premium', 'Assistance Chauffeur bilingue'],
+      available: true,
+      maintenanceStatus: 'Good'
+    },
+    {
+      id: 'van-1',
+      name: 'Mercedes-Benz Classe V Luxe Extra-Long',
+      category: 'Van',
+      passengerCapacity: 7,
+      luggageCapacity: 7,
+      baseRate: 180,
+      ratePerKm: 5.5,
+      hourlyRate: 250,
+      image: IMAGES.van,
+      specifications: ['Configuration Salon Face-à-Face', 'Tablettes de réunion amovibles', 'WiFi Multi-connexions Pro', 'Climatisation automatique tri-zone', 'Portes coulissantes électriques', 'Capacité bagages XXL'],
+      available: true,
+      maintenanceStatus: 'Good'
+    }
+  ],
+  drivers: [
+    {
+      id: 'driver-1',
+      name: 'Mohamed Ben Ali',
+      phone: '+216 98 123 456',
+      email: 'm.benali@prestige.tn',
+      rating: 4.9,
+      tripsCount: 1420,
+      languages: ['Arabe (Natif)', 'Français (Courant)', 'Anglais (Bilingue)'],
+      photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256&h=256',
+      available: true,
+      status: 'Active',
+      licenseNumber: 'TX-2018-99432'
+    },
+    {
+      id: 'driver-2',
+      name: 'Yassine Trabelsi',
+      phone: '+216 55 987 654',
+      email: 'y.trabelsi@prestige.tn',
+      rating: 5.0,
+      tripsCount: 890,
+      languages: ['Arabe (Natif)', 'Français (Courant)', 'Anglais (Intermédiaire)'],
+      photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256',
+      available: true,
+      status: 'Active',
+      licenseNumber: 'TX-2021-11843'
+    },
+    {
+      id: 'driver-3',
+      name: 'Amine Ferchiou',
+      phone: '+216 22 456 789',
+      email: 'a.ferchiou@prestige.tn',
+      rating: 4.85,
+      tripsCount: 2150,
+      languages: ['Arabe (Natif)', 'Français (Courant)', 'Anglais (Courant)'],
+      photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=256&h=256',
+      available: true,
+      status: 'Active',
+      licenseNumber: 'TX-2015-88402'
+    }
+  ],
+  bookings: [
+    {
+      id: 'booking-1',
+      bookingReference: 'PR-782103',
+      userEmail: 'samar8brm@gmail.com',
+      userName: 'Samar B.',
+      userPhone: '+216 94 112 233',
+      pickupLocation: 'Aéroport International de Tunis-Carthage (TUN), Tunis',
+      dropoffLocation: 'The Residence Tunis, Les Berges du Lac / Gammarth, Tunis',
+      pickupDate: '2026-06-25',
+      pickupTime: '14:30',
+      tripType: 'one-way',
+      distanceKm: 18.5,
+      vehicleId: 'sedan-1',
+      vehicleName: 'Mercedes-Benz Classe S Limousine',
+      vehicleCategory: 'Sedan',
+      addons: ['Bouteille d\'eau premium', 'Accueil Pancarte Nominative'],
+      driverId: 'driver-1',
+      driverName: 'Mohamed Ben Ali',
+      passengerName: 'Samar B.',
+      passengerPhone: '+216 94 112 233',
+      passengerEmail: 'samar8brm@gmail.com',
+      specialRequests: 'Client VIP. Merci de prévoir la température intérieure à 21°C.',
+      luggageCount: 2,
+      basePrice: 150.0,
+      taxes: 28.5,
+      fees: 15.00,
+      totalPrice: 193.5,
+      status: 'Confirmed',
+      paymentStatus: 'Paid',
+      paymentMethod: 'Stripe',
+      createdAt: '2026-06-24T08:00:00.000Z'
+    },
+    {
+      id: 'booking-2',
+      bookingReference: 'PR-992384',
+      userEmail: 'client@prestige.com',
+      userName: 'Mourad Gharbi',
+      userPhone: '+216 55 987 654',
+      pickupLocation: 'Les Berges du Lac 2, Tunis',
+      dropoffLocation: 'Hôtel Golden Tulip Gammarth, Gammarth, Tunis',
+      pickupDate: '2026-06-22',
+      pickupTime: '09:00',
+      tripType: 'one-way',
+      distanceKm: 12.0,
+      vehicleId: 'van-1',
+      vehicleName: 'Mercedes-Benz Classe V Luxe Extra-Long',
+      vehicleCategory: 'Van',
+      addons: ['Bouteilles d\'eau complémentaires'],
+      driverId: 'driver-3',
+      driverName: 'Amine Ferchiou',
+      passengerName: 'Membres du Comité d\'Administration',
+      passengerPhone: '+216 55 987 654',
+      passengerEmail: 'client@prestige.com',
+      specialRequests: 'Disposition salon requise pour réunion improvisée en route.',
+      luggageCount: 5,
+      basePrice: 250.0,
+      taxes: 47.5,
+      fees: 10.0,
+      totalPrice: 307.5,
+      status: 'Completed',
+      paymentStatus: 'Paid',
+      paymentMethod: 'Stripe',
+      createdAt: '2026-06-21T10:00:00.000Z',
+      review: {
+        rating: 5,
+        comment: 'Chauffeur d\'un professionnalisme exemplaire et voiture d\'une propreté irréprochable. Idéal pour nos transferts business à Tunis.',
+        createdAt: '2026-06-22T10:30:00.000Z'
+      }
+    }
+  ],
+  users: [
+    {
+      id: 'user-admin',
+      name: 'Samar B.',
+      email: 'samar8brm@gmail.com',
+      phone: '+216 94 112 233',
+      role: 'admin',
+      favoriteLocations: ['The Residence Tunis, Gammarth', 'Aéroport Tunis-Carthage (TUN)'],
+      createdAt: '2026-06-24T07:30:00.000Z'
+    },
+    {
+      id: 'user-standard',
+      name: 'Mourad Gharbi',
+      email: 'client@prestige.com',
+      phone: '+216 55 987 654',
+      role: 'user',
+      favoriteLocations: ['Les Berges du Lac 2, Tunis', 'La Marsa, Tunis'],
+      createdAt: '2026-06-20T11:00:00.000Z'
+    }
+  ],
+  reviews: [
+    {
+      id: 'rev-1',
+      bookingId: 'booking-2',
+      userName: 'Mourad Gharbi',
+      userEmail: 'client@prestige.com',
+      rating: 5,
+      comment: 'Chauffeur extrêmement professionnel. Service de conciergerie de premier ordre.',
+      vehicleCategory: 'Van',
+      date: '2026-06-22'
+    },
+    {
+      id: 'rev-2',
+      bookingId: 'booking-mock-1',
+      userName: 'Salma Rekik',
+      userEmail: 'salma@rekik.tn',
+      rating: 5,
+      comment: 'La Mercedes Classe S était parfaite pour notre transfert business vers les Berges du Lac. Un chauffeur distingué et discret. Je recommande vivement Prestige Cars Tunisie.',
+      vehicleCategory: 'Sedan',
+      date: '2026-06-20'
+    },
+    {
+      id: 'rev-3',
+      bookingId: 'booking-mock-2',
+      userName: 'Anis Mansour',
+      userEmail: 'anis@mansour.tn',
+      rating: 5,
+      comment: 'Service absolument magnifique depuis l\'aéroport. Le Range Rover SUV était exceptionnel. Chauffeur bilingue irréprochable.',
+      vehicleCategory: 'SUV',
+      date: '2026-06-19'
+    }
+  ],
+  settings: {
+    companyName: 'Prestige Cars Chauffeur Tunisie',
+    email: 'contact@prestigecars-chauffeur.tn',
+    phone: '+216 71 850 100',
+    address: 'Avenue Habib Bourguiba, 1001 Tunis, Tunisie',
+    stripePublishableKey: 'pk_test_prestige_cars_fake_51N8e',
+    supportHours: 'Service 24h/7j - Support Conciergerie',
+    emailTemplates: {
+      confirmation: 'Cher {name},\n\nVotre réservation de voiture avec chauffeur a bien été enregistrée sous la référence {reference}.\n\nDétails de la course:\nDate: {date} à {time}\nPrise en charge: {pickup}\nDestination: {dropoff}\nVéhicule: {vehicle}\nTarif total: {price} DT\n\nMerci de votre confiance.\n\nPrestige Cars Tunisie',
+      assignment: 'Cher {name},\n\nUn chauffeur Prestige Cars Tunisie vous a été assigné pour votre course {reference}.\n\nChauffeur: {driver_name}\nTéléphone: {driver_phone}\n\nIl vous contactera à son arrivée.\n\nPrestige Cars Tunisie',
+      reminder: 'Rappel de votre course de demain sous la référence {reference}. Votre chauffeur sera présent à {time} à l\'adresse de prise en charge.\n\nPrestige Cars Tunisie',
+      completion: 'Cher {name},\n\nNous espérons que votre voyage avec Prestige Cars Tunisie fut agréable. Voici votre reçu de {price} DT.\n\nVous pouvez laisser un avis sur notre site.\n\nPrestige Cars Tunisie'
+    }
+  },
+  promoCodes: [
+    { code: 'PRESTIGE10', discountPercent: 10, active: true, description: '10% de réduction sur toutes les prestations' },
+    { code: 'WELCOME15', discountPercent: 15, active: true, description: '15% de réduction pour les nouveaux clients' },
+    { code: 'VIPSUMMER', discountPercent: 20, active: true, description: '20% exclusif sur la catégorie SUV en été' }
+  ]
+};
+
+// Helper to safely load data
+export function readDb(): Schema {
+  try {
+    if (fs.existsSync(DATA_FILE_PATH)) {
+      const data = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error reading DB, resetting to default:', error);
+  }
+  // If error or file not exists, write default and return
+  writeDb(DEFAULT_DATA);
+  return DEFAULT_DATA;
+}
+
+// Helper to safely write data
+export function writeDb(data: Schema): void {
+  try {
+    fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error('Error writing DB:', error);
+  }
+}

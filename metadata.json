@@ -1,0 +1,6 @@
+{
+  "name": "Prestige Cars",
+  "description": "Premium car rental service with professional drivers and integrated reservation system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
