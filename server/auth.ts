@@ -3,7 +3,19 @@ import { Request, Response, NextFunction } from 'express';
 import { readDb } from './db';
 import { User } from '../src/types';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'prestige-chauffeur-super-secret-key-2026';
+// JWT_SECRET must be provided via environment variable. There is intentionally
+// no hardcoded fallback here: a fallback secret committed to source control
+// (and public on GitHub) would let anyone forge valid auth tokens, including
+// admin tokens. The server refuses to start without a real secret instead.
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error(
+    'JWT_SECRET environment variable is missing or too short (must be at least 32 characters). ' +
+    'Set it in your .env file. You can generate a strong one with:\n' +
+    '  node -e "console.log(require(\'crypto\').randomBytes(48).toString(\'hex\'))"'
+  );
+}
 
 // Safe password hashing using Node's built-in crypto module
 export function hashPassword(password: string): string {
